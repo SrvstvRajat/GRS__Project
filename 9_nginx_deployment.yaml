@@ -1,32 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: latency-nginx
+  name: web
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: latency-nginx
+      app: web
   template:
     metadata:
       labels:
-        app: latency-nginx
+        app: web
     spec:
       containers:
-      - name: nginx
-        image: nginx
-        ports:
-        - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: latency-nginx-service
-spec:
-  selector:
-    app: latency-nginx
-  ports:
-  - port: 80
-    targetPort: 80
-    nodePort: 30007
-  type: NodePort
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
