@@ -91,7 +91,7 @@ Continuous curl traffic to nginx service.
 
 ### Experiment 2: CPU Contention
 ```bash
-kubectl run cpu-stress2 --image=polinux/stress --restart=Never -- stress --cpu 4 --timeout 120
+./9_cpu_stress.sh
 ```
 ### Experiment 3: Parallel Load
 Inside curl pod:
@@ -131,5 +131,9 @@ GRS_project/
 ├── 9_deploy_nginx.sh
 ├── 9_baseline_bpftrace.sh
 ├── 9_cpu_stress.sh
+├── 9_trace_sched.py
+├── 9_trace_tcp.py
+├── 9_plot_latency.py
+├── 9_plot_latency.png
 └── 9_report.md
 ```
