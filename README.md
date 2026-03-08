@@ -37,28 +37,33 @@ Load Generator (curl pod)
 - polinux/stress
 
 ## Setup Steps
-### 1. Start Minikube
+### Terminal 1 (Kubernetes Setup):
+#### 1. Start Minikube
 Run the script and make it executable:
 ```bash
 chmod +x 9_start_minikube.sh
 ./9_start_minikube.sh
 ```
-
-### 2. Install Cilium
+#### 2. Install Cilium
 Run the script and make it executable:
 ```bash
 chmod +x 9_install_cilium.sh
 ./9_install_cilium.sh
 ```
-
-### 3. Deploy nginx microservice
+#### 3. Deploy nginx microservice
 Run the script and make it executable:
 ```bash
 chmod +x 9_deploy_nginx.sh
 ./9_deploy_nginx.sh
 ```
+### Verify: 
+```bash
+kubectl get pods
+kubectl get svc
+```
 
-### 4. Generate traffic
+### Terminal 2 (Traffic Generator using curl pod)
+#### 4. Generate traffic
 Run a curl pod:
 ```bash
 kubectl run curl --image=curlimages/curl -it --restart=Never -- sh
@@ -68,18 +73,22 @@ Inside the pod:
 while true; do curl -s http://web > /dev/null; done
 ```
 
-### 5. Observe network flows
+### Terminal 3 (Network Flow Monitoring using Hubble)
+#### 5. Observe network flows
 ```bash
 cilium hubble port-forward &
 hubble observe
 ```
 
-### 6. Run kernel latency probe
+### Terminal 4 (Kernel TCP Latency Probe):
+Terminal 1 can be reused here
+#### 6. Run kernel latency probe
 Run the script and make it executable:
 ```bash
 chmod +x 9_baseline_bpftrace.sh
 ./9_baseline_bpftrace.sh
 ```
+Let the probe run for 10–20 seconds while traffic is being generated, then stop it using `Ctrl+C` to print the latency histogram.
 
 ## Experiments
 ### Experiment 1: Baseline
@@ -89,7 +98,6 @@ Continuous curl traffic to nginx service.
 ```bash
 kubectl run cpu-stress2 --image=polinux/stress --restart=Never -- stress --cpu 4 --timeout 120
 ```
-
 ### Experiment 3: Parallel Load
 Inside curl pod:
 ```bash
@@ -110,7 +118,7 @@ done
 
 ## Experimental Results
 - Baseline: typical latency around tens of microseconds, tail around ~1 ms
-- CPU stress: tail extended to ~2–4 ms
+- CPU stress: tail latency increased to approximately 2–4 ms
 - Parallel load: rare outliers extended to tens of milliseconds
 
 ## Conclusion
