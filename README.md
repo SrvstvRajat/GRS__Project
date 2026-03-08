@@ -56,11 +56,6 @@ Run the script and make it executable:
 chmod +x 9_deploy_nginx.sh
 ./9_deploy_nginx.sh
 ```
-### Verify: 
-```bash
-kubectl get pods
-kubectl get svc
-```
 
 ### Terminal 2 (Traffic Generator using curl pod)
 #### 4. Generate traffic
