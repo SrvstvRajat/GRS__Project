@@ -113,6 +113,7 @@ done
 Tail latency in Kubernetes microservices increases under contention and higher concurrency. Combining Hubble and bpftrace provides visibility into both dataplane flow behavior and kernel-level TCP latency.
 
 ## Repository Structure
+```bash
 GRS_project/
 │
 ├── README.md
@@ -124,3 +125,4 @@ GRS_project/
 ├── 9_baseline_bpftrace.sh
 └── 9_cpu_stress.sh
 └── 9_report.md
+```
