@@ -40,22 +40,22 @@ Load Generator (curl pod)
 ### 1. Start Minikube
 Run the script and make it executable:
 ```bash
-./9_start_minikube.sh
 chmod +x 9_start_minikube.sh
+./9_start_minikube.sh
 ```
 
 ### 2. Install Cilium
 Run the script and make it executable:
 ```bash
-./9_install_cilium.sh
 chmod +x 9_install_cilium.sh
+./9_install_cilium.sh
 ```
 
 ### 3. Deploy nginx microservice
 Run the script and make it executable:
 ```bash
-./9_deploy_nginx.sh
 chmod +x 9_deploy_nginx.sh
+./9_deploy_nginx.sh
 ```
 
 ### 4. Generate traffic
@@ -77,8 +77,8 @@ hubble observe
 ### 6. Run kernel latency probe
 Run the script and make it executable:
 ```bash
-./9_baseline_bpftrace.sh
 chmod +x 9_baseline_bpftrace.sh
+./9_baseline_bpftrace.sh
 ```
 
 ## Experiments
@@ -108,7 +108,7 @@ done
 - CPU stress increased tail latency modestly
 - Parallel request load caused much stronger tail-latency spikes
 
-## Approximate Results
+## Experimental Results
 - Baseline: typical latency around tens of microseconds, tail around ~1 ms
 - CPU stress: tail extended to ~2–4 ms
 - Parallel load: rare outliers extended to tens of milliseconds
@@ -122,11 +122,11 @@ GRS_project/
 │
 ├── README.md
 ├── 9_nginx_deployment.yaml
-└── 9_nginx_service.yaml
+├── 9_nginx_service.yaml
 ├── 9_start_minikube.sh
 ├── 9_install_cilium.sh
 ├── 9_deploy_nginx.sh
 ├── 9_baseline_bpftrace.sh
-└── 9_cpu_stress.sh
+├── 9_cpu_stress.sh
 └── 9_report.md
 ```
