@@ -91,6 +91,7 @@ Continuous curl traffic to nginx service.
 
 ### Experiment 2: CPU Contention
 ```bash
+chmod +x 9_cpu_stress.sh
 ./9_cpu_stress.sh
 ```
 ### Experiment 3: Parallel Load
