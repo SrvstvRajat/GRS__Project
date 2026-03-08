@@ -38,22 +38,24 @@ Load Generator (curl pod)
 
 ## Setup Steps
 ### 1. Start Minikube
+Run the script and make it executable:
 ```bash
-minikube start --driver=docker
-kubectl get nodes
+./9_start_minikube.sh
+chmod +x 9_start_minikube.sh
 ```
-### 2. Install Clium
+
+### 2. Install Cilium
+Run the script and make it executable:
 ```bash
-cilium install
-cilium hubble enable --ui
-cilium status --wait
+./9_install_cilium.sh
+chmod +x 9_install_cilium.sh
 ```
+
 ### 3. Deploy nginx microservice
+Run the script and make it executable:
 ```bash
-kubectl apply -f k8s/nginx-deployment.yaml
-kubectl apply -f k8s/nginx-service.yaml
-kubectl get pods
-kubectl get svc
+./9_deploy_nginx.sh
+chmod +x 9_deploy_nginx.sh
 ```
 
 ### 4. Generate traffic
@@ -73,8 +75,10 @@ hubble observe
 ```
 
 ### 6. Run kernel latency probe
+Run the script and make it executable:
 ```bash
-sudo bpftrace -e 'kprobe:tcp_sendmsg { @start[tid] = nsecs; } kretprobe:tcp_sendmsg /@start[tid]/ { @lat = hist((nsecs - @start[tid]) / 1000); delete(@start[tid]); }'
+./9_baseline_bpftrace.sh
+chmod +x 9_baseline_bpftrace.sh
 ```
 
 ## Experiments
