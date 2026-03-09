@@ -19,7 +19,7 @@ do
     P90=$(echo "$RESULT" | grep "90%" | awk '{print $2}' | sed 's/ms//')
     P99=$(echo "$RESULT" | grep "99%" | awk '{print $2}' | sed 's/ms//')
 
-    echo "$c,$P50,$P95,$P99" >> $OUTPUT_FILE
+    echo "$c,$P50,$P90,$P99" >> $OUTPUT_FILE
 done
 
 echo "Experiment completed."
