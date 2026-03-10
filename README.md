@@ -22,14 +22,22 @@ Kubernetes provides convenient deployment and service abstraction, but it does n
 - Linux kernel TCP stack behavior
 
 ## System Architecture
-
-Load Generator (curl pod)  
-→ Kubernetes Service (`web`)  
-→ Cilium eBPF dataplane  
-→ Linux kernel TCP stack  
-→ bpftrace latency probe (`tcp_sendmsg`)  
-→ Hubble flow monitoring
-
+```bash
+Load Generator (curl / wrk)
+        ↓
+Kubernetes Service (web)
+        ↓
+nginx Pod
+        ↓
+Cilium eBPF dataplane
+        ↓
+Linux TCP stack
+```
+Observability layer:
+```bash
+eBPF probes (bpftrace)
+Hubble flow monitoring
+```
 ## Components Used
 
 - Minikube
@@ -40,6 +48,7 @@ Load Generator (curl pod)
 - bpftrace
 - nginx
 - curlimages/curl
+- wrk
 - polinux/stress
 
 ## Setup Steps
@@ -81,7 +90,6 @@ Run a curl pod:
 
 ```bash
 kubectl run curl --image=curlimages/curl -it --restart=Never -- sh
-kubectl port-forward svc/web 8080:80
 ```
 
 Inside the pod:
@@ -96,7 +104,7 @@ while true; do curl -s http://web > /dev/null; done
 
 ```bash
 cilium hubble port-forward &
-hubble observe
+cilium hubble observe
 ```
 
 ### Terminal 4 (Kernel TCP Latency Probe):
@@ -175,16 +183,28 @@ Tail latency in Kubernetes microservices increases under contention and higher c
 GRS_project/
 │
 ├── README.md
-├── 9_nginx_deployment.yaml
-├── 9_nginx_service.yaml
+├── 9_report.pdf
+│
 ├── 9_start_minikube.sh
 ├── 9_install_cilium.sh
 ├── 9_deploy_nginx.sh
+│
+├── 9_nginx_microservice_deployment.yaml
+├── 9_nginx_service.yaml
+│
 ├── 9_baseline_bpftrace.sh
+├── 9_cpu_scheduling.sh
 ├── 9_cpu_stress.sh
-├── 9_trace_sched.py
-├── 9_trace_tcp.py
-├── 9_plot_latency.py
-├── 9_plot_latency.png
-└── 9_report.md
+│
+├── 9_wrk_load_stress_latency.sh
+├── 9_wrk_load_latency_results.csv
+│
+├── 9_wrk_load_plot_latency.py
+├── 9_wrk_load_latency_plot.png
+│
+├── 9_tcp_tail_latency_plot.py
+├── 9_tcp_kernel_1.png
+│
+├── 9_cpu_scheduling_plot.py
+└── cpu_queue.png
 ```
