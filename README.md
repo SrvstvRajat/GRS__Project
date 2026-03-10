@@ -78,12 +78,21 @@ hubble observe
 ### Terminal 4 (Kernel TCP Latency Probe):
 Terminal 1 can be reused here
 #### 6. Run kernel latency probe
+(This probe measures latency inside the kernel TCP send path (tcp_sendmsg).)
 Run the script and make it executable:
 ```bash
 chmod +x 9_baseline_bpftrace.sh
 ./9_baseline_bpftrace.sh
 ```
 Let the probe run for 10–20 seconds while traffic is being generated, then stop it using `Ctrl+C` to print the latency histogram.
+
+#### 7. Run Queue Latency Probe (CPU Scheduling Delay)
+This probe measures how long a thread waits in the CPU run queue before being scheduled.
+Run the script and make it executable:
+```bash
+chmod +x 9_cpu_scheduling.sh
+./9_cpu_scheduling.sh
+```
 
 ## Experiments
 ### Experiment 1: Baseline
