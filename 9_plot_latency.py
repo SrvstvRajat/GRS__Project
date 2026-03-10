@@ -21,5 +21,5 @@ plt.title("Latency vs Load in Kubernetes Microservice")
 plt.legend()
 plt.grid(True)
 
-plt.savefig("latency_plot.png")
+plt.savefig("9_latency_plot.png")
 plt.show()
