@@ -3,7 +3,7 @@
 SERVICE_URL="http://localhost:8080"
 DURATION=30s
 
-OUTPUT_FILE="latency_results.csv"
+OUTPUT_FILE="9_latency_results.csv"
 
 echo "connections,p50_ms,p90_ms,p99_ms" > $OUTPUT_FILE
 
