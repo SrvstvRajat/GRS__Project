@@ -1,19 +1,144 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flask-app-code
+data:
+  app.py: |
+    from flask import Flask, jsonify
+    import redis
+    import os
+    import time
+    import socket
+
+    app = Flask(__name__)
+
+    REDIS_HOST = os.environ.get("REDIS_HOST", "redis.default.svc.cluster.local")
+    REDIS_PORT = int(os.environ.get("REDIS_PORT", 6379))
+
+    r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, socket_connect_timeout=2)
+
+    @app.route("/")
+    def index():
+        start = time.time()
+
+        key = f"req:{socket.gethostname()}:{int(start * 1000)}"
+        r.set(key, "hit", ex=10)
+        val = r.get(key)
+
+        count = r.incr("request_count")
+
+        latency_ms = (time.time() - start) * 1000
+
+        return jsonify({
+            "status": "ok",
+            "redis_host": REDIS_HOST,
+            "request_count": count,
+            "redis_latency_ms": round(latency_ms, 3),
+            "value": val.decode() if val else None
+        })
+
+    @app.route("/health")
+    def health():
+        try:
+            r.ping()
+            return jsonify({"status": "ok", "redis": "reachable"})
+        except Exception as e:
+            return jsonify({"status": "error", "redis": str(e)}), 500
+
+    if __name__ == "__main__":
+        app.run(host="0.0.0.0", port=80)
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web
+  name: nginx
+  labels:
+    app: nginx
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: web
+      app: nginx
   template:
     metadata:
       labels:
-        app: web
+        app: nginx
     spec:
+      nodeSelector:
+        role: nginx
+      initContainers:
+        - name: install-deps
+          image: python:3.11-slim
+          command:
+            [
+              "pip",
+              "install",
+              "flask",
+              "redis",
+              "gunicorn",
+              "--target",
+              "/deps",
+              "-q",
+            ]
+          volumeMounts:
+            - name: deps
+              mountPath: /deps
       containers:
-        - name: nginx
-          image: nginx
+        - name: app
+          image: python:3.11-slim
+          command:
+            [
+              "python",
+              "-m",
+              "gunicorn",
+              "-w",
+              "4",
+              "-b",
+              "0.0.0.0:80",
+              "--timeout",
+              "60",
+              "app:app",
+            ]
+          env:
+            - name: REDIS_HOST
+              value: "redis.default.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: PYTHONPATH
+              value: "/deps"
+            - name: PYTHONUNBUFFERED
+              value: "1"
           ports:
             - containerPort: 80
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          volumeMounts:
+            - name: app-code
+              mountPath: /app
+            - name: deps
+              mountPath: /deps
+          workingDir: /app
+      volumes:
+        - name: app-code
+          configMap:
+            name: flask-app-code
+        - name: deps
+          emptyDir: {}
