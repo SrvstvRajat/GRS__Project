@@ -22,27 +22,15 @@ Kubernetes provides convenient deployment and service abstraction, but it does n
 - Linux kernel TCP stack behavior
 
 ## System Architecture
-```bash
-Load Generator (curl / wrk)
-        ↓
-# GRS Project
-
-Project ID: 9
-
-This README is only for running the project.
-The final written report is in [9_final_report.txt](9_final_report.txt).
-
-## 1. Prerequisites
-
 Install these tools on Linux host:
-
+```bash
 - minikube
 - kubectl
 - docker
 - wrk
 - bpftrace
 - sudo access (required for probes)
-
+```
 Quick check:
 
 ```bash
