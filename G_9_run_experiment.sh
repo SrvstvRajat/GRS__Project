@@ -16,12 +16,12 @@ echo ""
 
 # ─── STEP 1: Start cluster ───────────────────
 echo "STEP 1: Starting 3-node Minikube cluster..."
-bash 9_start_minikube.sh
+bash G_9_start_minikube.sh
 echo ""
 
 # ─── STEP 2: Deploy microservices ────────────
 echo "STEP 2: Deploying flask-redis app + redis..."
-bash 9_deploy_all.sh
+bash G_9_deploy_all.sh
 echo ""
 
 # ─── STEP 3: Verify placement ────────────────
@@ -38,7 +38,7 @@ echo ""
 # ─── STEP 4: Print bpftrace commands ─────────
 echo "STEP 4: eBPF Probe Instructions"
 echo "────────────────────────────────────────"
-bash 9_ebpf_probes.sh
+bash G_9_ebpf_probes.sh
 echo ""
 
 echo "════════════════════════════════════════"
@@ -50,7 +50,7 @@ echo " 2. Run one bpftrace probe per terminal"
 echo "    (commands printed above)"
 echo " 3. Once all probes are running, execute:"
 echo ""
-echo "      bash 9_wrk_load_stress_latency.sh"
+echo "      bash G_9_wrk_load_stress_latency.sh"
 echo ""
 echo " 4. When wrk finishes, hit Ctrl+C on each"
 echo "    probe terminal to get the histograms."

@@ -22,7 +22,9 @@ Kubernetes provides convenient deployment and service abstraction, but it does n
 - Linux kernel TCP stack behavior
 
 ## System Architecture
+
 Install these tools on Linux host:
+
 ```bash
 - minikube
 - kubectl
@@ -31,6 +33,7 @@ Install these tools on Linux host:
 - bpftrace
 - sudo access (required for probes)
 ```
+
 Quick check:
 
 ```bash
@@ -46,14 +49,14 @@ bpftrace --version
 Run once inside this folder:
 
 ```bash
-chmod +x 9_start_minikube.sh \
-        9_deploy_all.sh \
-        9_run_experiment.sh \
-        9_ebpf_probes.sh \
-        9_wrk_run_all_phases.sh \
-        9_phase1_baseline.sh \
-        9_phase2_stress.sh \
-        9_phase3_recovery.sh
+chmod +x G_9_start_minikube.sh \
+        G_9_deploy_all.sh \
+        G_9_run_experiment.sh \
+        G_9_ebpf_probes.sh \
+        G_9_wrk_run_all_phases.sh \
+        G_9_phase1_baseline.sh \
+        G_9_phase2_stress.sh \
+        G_9_phase3_recovery.sh
 ```
 
 ## 3. Full Setup (Cluster + App)
@@ -61,7 +64,7 @@ chmod +x 9_start_minikube.sh \
 Recommended single command:
 
 ```bash
-bash 9_run_experiment.sh
+bash G_9_run_experiment.sh
 ```
 
 What this does:
@@ -76,29 +79,29 @@ What this does:
 Open 5 terminals and run one probe per terminal. You can print all commands with:
 
 ```bash
-bash 9_ebpf_probes.sh
+bash G_9_ebpf_probes.sh
 ```
 
 Or run each script directly in separate terminals:
 
 ```bash
-bash 9_probe_run_queue.sh
+bash G_9_probe_run_queue.sh
 ```
 
 ```bash
-bash 9_probe_tcp_send.sh
+bash G_9_probe_tcp_send.sh
 ```
 
 ```bash
-bash 9_probe_tcp_retransmit.sh
+bash G_9_probe_tcp_retransmit.sh
 ```
 
 ```bash
-bash 9_probe_socket_drop.sh
+bash G_9_probe_socket_drop.sh
 ```
 
 ```bash
-bash 9_probe_reddis.sh
+bash G_9_probe_reddis.sh
 ```
 
 Keep probes running while workload runs. Use Ctrl+C to stop and print final histograms/counters.
@@ -108,7 +111,7 @@ Keep probes running while workload runs. Use Ctrl+C to stop and print final hist
 ### Option A (recommended): all phases in one command
 
 ```bash
-bash 9_wrk_run_all_phases.sh
+bash G_9_wrk_run_all_phases.sh
 ```
 
 This runs:
@@ -120,9 +123,9 @@ This runs:
 ### Option B: run phases manually
 
 ```bash
-bash 9_phase1_baseline.sh
-bash 9_phase2_stress.sh
-bash 9_phase3_recovery.sh
+bash G_9_phase1_baseline.sh
+bash G_9_phase2_stress.sh
+bash G_9_phase3_recovery.sh
 ```
 
 ## 6. Results Output
@@ -138,9 +141,9 @@ Generated CSV files:
 Run plot scripts after CSV data is available:
 
 ```bash
-python3 9_wrk_load_plot_latency.py
-python3 9_tcp_tail_latency_plot.py
-python3 9_cpu_scheduling_plot.py
+python3 G_9_wrk_load_plot_latency.py
+python3 G_9_tcp_tail_latency_plot.py
+python3 G_9_cpu_scheduling_plot.py
 ```
 
 ## 8. Quick Troubleshooting
@@ -162,7 +165,7 @@ curl -i "http://$(minikube ip):30080/health"
 If needed, redeploy app stack:
 
 ```bash
-bash 9_deploy_all.sh
+bash G_9_deploy_all.sh
 ```
 
 ## 9. Clean Restart

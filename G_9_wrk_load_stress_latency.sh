@@ -4,7 +4,7 @@
 MINIKUBE_IP=$(minikube ip)
 SERVICE_URL="http://$MINIKUBE_IP:30080"
 # SERVICE_URL="http://$(minikube ip):30080"
-OUTPUT_FILE="9_wrk_results.csv"
+OUTPUT_FILE="G_9_wrk_results.csv"
 THREADS=4
 DURATION=30s
 
@@ -19,7 +19,7 @@ if [ "$HTTP_STATUS" != "200" ]; then
   exit 1
 fi
 
-echo "timestamp,connections,phase,p50_ms,p75_ms,p90_ms,p99_ms,rps,errors" > $OUTPUT_FILE
+echo "timestamp,connections,phase,p50_ms,p75_ms,p90_ms,p9G_9_ms,rps,errors" > $OUTPUT_FILE
 
 LOADS=(10 50 100 200 300)
 
@@ -60,7 +60,7 @@ echo "============================================"
 echo " PHASE 1: Baseline (no cpu-stress)"
 echo "============================================"
 
-kubectl delete -f 9_cpu_stress_pod.yaml 2>/dev/null || true
+kubectl delete -f G_9_cpu_stress_pod.yaml 2>/dev/null || true
 sleep 3
 
 for c in "${LOADS[@]}"; do
@@ -76,7 +76,7 @@ echo " PHASE 2: Under CPU stress"
 echo "============================================"
 
 echo "Launching cpu-stress on minikube-m03..."
-kubectl apply -f 9_cpu_stress_pod.yaml
+kubectl apply -f G_9_cpu_stress_pod.yaml
 
 echo "Waiting for stress pod to be Ready..."
 kubectl wait --for=condition=Ready pod/cpu-stress --timeout=60s

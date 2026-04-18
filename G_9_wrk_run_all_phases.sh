@@ -8,7 +8,7 @@
 
 set -e
 
-source ./9_wrk_config.sh
+source ./G_9_wrk_config.sh
 
 echo ""
 echo "╔══════════════════════════════════════════╗"
@@ -30,13 +30,13 @@ echo ""
 echo $CSV_HEADER > $CSV_COMBINED
 
 # ─── Run all phases ───────────────────────────
-bash 9_phase1_baseline.sh
+bash G_9_phase1_baseline.sh
 echo ""
 
-bash 9_phase2_stress.sh
+bash G_9_phase2_stress.sh
 echo ""
 
-bash 9_phase3_recovery.sh
+bash G_9_phase3_recovery.sh
 echo ""
 
 # ─── Print combined results ───────────────────

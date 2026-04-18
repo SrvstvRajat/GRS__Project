@@ -331,6 +331,6 @@ echo ""
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo " Start all 5 probes, then run:"
-echo "   bash 9_wrk_load_stress_latency.sh"
+echo "   bash G_9_wrk_load_stress_latency.sh"
 echo " Hit Ctrl+C on each probe when wrk finishes."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

@@ -58,7 +58,7 @@ def main():
 
     # 3) TCP retransmits by process
     retrans_labels = [
-        "calico-node", "swapper/5", "swapper/0", "threaded-ml", "9_phase3_recove", "ksoftirqd/6",
+        "calico-node", "swapper/5", "swapper/0", "threaded-ml", "G_9_phase3_recove", "ksoftirqd/6",
         "ksoftirqd/0", "redis-server", "ksoftirqd/1", "wrk", "swapper/6", "gnome-shell", "code",
         "ksoftirqd/7", "avahi-daemon", "Compositor", "swapper/3", "swapper/4", "ThreadPoolForeg",
         "CodecWorker", "swapper/2", "swapper/1", "swapper/7", "python",

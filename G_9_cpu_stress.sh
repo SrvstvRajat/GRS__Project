@@ -5,7 +5,7 @@ echo "============================================"
 echo " Launching CPU stress on minikube-m03"
 echo "============================================"
 
-kubectl apply -f 9_cpu_stress_pod.yaml
+kubectl apply -f G_9_cpu_stress_pod.yaml
 
 echo "Waiting for stress pod to start..."
 kubectl wait --for=condition=Ready pod/cpu-stress --timeout=60s 2>/dev/null || true

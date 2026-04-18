@@ -8,7 +8,7 @@ echo "============================================"
 
 # Deploy Redis FIRST — app depends on it
 echo "[1/3] Deploying Redis (node: minikube control-plane)..."
-kubectl apply -f 9_redis_deployment.yaml
+kubectl apply -f G_9_redis_deployment.yaml
 
 echo "Waiting for Redis to be ready..."
 kubectl wait --for=condition=Ready pod -l app=redis --timeout=90s
@@ -17,8 +17,8 @@ echo ""
 
 # Deploy Flask app
 echo "[2/3] Deploying Flask-Redis app (node: minikube-m02)..."
-kubectl apply -f 9_nginx_microservice_deployment.yaml
-kubectl apply -f 9_nginx_service.yaml
+kubectl apply -f G_9_nginx_microservice_deployment.yaml
+kubectl apply -f G_9_nginx_service.yaml
 
 echo "Waiting for app pod to be ready (includes pip install, takes ~60s)..."
 kubectl wait --for=condition=Ready pod -l app=nginx --timeout=120s

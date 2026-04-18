@@ -17,7 +17,7 @@ CSV_STRESS="$RESULTS_DIR/phase2_stress.csv"
 CSV_RECOVERY="$RESULTS_DIR/phase3_recovery.csv"
 CSV_COMBINED="$RESULTS_DIR/combined_results.csv"
 
-CSV_HEADER="timestamp,connections,phase,p50_ms,p75_ms,p90_ms,p99_ms,rps,errors"
+CSV_HEADER="timestamp,connections,phase,p50_ms,p75_ms,p90_ms,p9G_9_ms,rps,errors"
 
 # ── Latency parser ────────────────────────────
 parse_latency() {

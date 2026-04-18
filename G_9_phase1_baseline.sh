@@ -6,7 +6,7 @@
 #  Measures natural latency of flask → redis.
 # ============================================
 
-source ./9_wrk_config.sh
+source ./G_9_wrk_config.sh
 
 echo "============================================"
 echo " PHASE 1: Baseline (no cpu-stress)"

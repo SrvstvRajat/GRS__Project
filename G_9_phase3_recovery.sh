@@ -6,7 +6,7 @@
 #  to settle, then measures recovered latency.
 # ============================================
 
-source ./9_wrk_config.sh
+source ./G_9_wrk_config.sh
 
 echo "============================================"
 echo " PHASE 3: Recovery (stress removed)"

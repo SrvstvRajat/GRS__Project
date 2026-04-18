@@ -6,7 +6,7 @@
 #  Measures tail latency under noisy neighbor.
 # ============================================
 
-source ./9_wrk_config.sh
+source ./G_9_wrk_config.sh
 
 echo "============================================"
 echo " PHASE 2: Under CPU stress"
@@ -18,7 +18,7 @@ check_service
 
 # Launch stress pod
 echo "Launching cpu-stress pod on minikube-m03..."
-kubectl apply -f 9_cpu_stress_pod.yaml
+kubectl apply -f G_9_cpu_stress_pod.yaml
 
 echo "Waiting for stress pod to be Ready..."
 kubectl wait --for=condition=Ready pod/cpu-stress --timeout=60s
@@ -43,4 +43,4 @@ cat $CSV_STRESS
 
 echo ""
 echo "NOTE: cpu-stress pod is still running."
-echo "Run 9_phase3_recovery.sh to kill it and measure recovery."
+echo "Run G_9_phase3_recovery.sh to kill it and measure recovery."
