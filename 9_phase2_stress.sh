@@ -18,7 +18,7 @@ check_service
 
 # Launch stress pod
 echo "Launching cpu-stress pod on minikube-m03..."
-kubectl apply -f S_9_cpu_stress_pod.yaml
+kubectl apply -f 9_cpu_stress_pod.yaml
 
 echo "Waiting for stress pod to be Ready..."
 kubectl wait --for=condition=Ready pod/cpu-stress --timeout=60s

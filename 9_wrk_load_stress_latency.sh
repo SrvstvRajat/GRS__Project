@@ -60,7 +60,7 @@ echo "============================================"
 echo " PHASE 1: Baseline (no cpu-stress)"
 echo "============================================"
 
-kubectl delete -f S_9_cpu_stress_pod.yaml 2>/dev/null || true
+kubectl delete -f 9_cpu_stress_pod.yaml 2>/dev/null || true
 sleep 3
 
 for c in "${LOADS[@]}"; do
@@ -76,7 +76,7 @@ echo " PHASE 2: Under CPU stress"
 echo "============================================"
 
 echo "Launching cpu-stress on minikube-m03..."
-kubectl apply -f S_9_cpu_stress_pod.yaml
+kubectl apply -f 9_cpu_stress_pod.yaml
 
 echo "Waiting for stress pod to be Ready..."
 kubectl wait --for=condition=Ready pod/cpu-stress --timeout=60s

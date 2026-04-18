@@ -21,7 +21,7 @@ echo ""
 
 # ─── STEP 2: Deploy microservices ────────────
 echo "STEP 2: Deploying flask-redis app + redis..."
-bash S_9_deploy_all.sh
+bash 9_deploy_all.sh
 echo ""
 
 # ─── STEP 3: Verify placement ────────────────
@@ -38,7 +38,7 @@ echo ""
 # ─── STEP 4: Print bpftrace commands ─────────
 echo "STEP 4: eBPF Probe Instructions"
 echo "────────────────────────────────────────"
-bash S_9_ebpf_probes.sh
+bash 9_ebpf_probes.sh
 echo ""
 
 echo "════════════════════════════════════════"

@@ -8,7 +8,7 @@ echo "============================================"
 
 # Deploy Redis FIRST — app depends on it
 echo "[1/3] Deploying Redis (node: minikube control-plane)..."
-kubectl apply -f S_9_redis_deployment.yaml
+kubectl apply -f 9_redis_deployment.yaml
 
 echo "Waiting for Redis to be ready..."
 kubectl wait --for=condition=Ready pod -l app=redis --timeout=90s
