@@ -25,186 +25,160 @@ Kubernetes provides convenient deployment and service abstraction, but it does n
 ```bash
 Load Generator (curl / wrk)
         ↓
-Kubernetes Service (web)
-        ↓
-nginx Pod
-        ↓
-Cilium eBPF dataplane
-        ↓
-Linux TCP stack
-```
-Observability layer:
-```bash
-eBPF probes (bpftrace)
-Hubble flow monitoring
-```
-## Components Used
+# GRS Project
 
-- Minikube
+Project ID: 9
+
+This README is only for running the project.
+The final written report is in [9_final_report.txt](9_final_report.txt).
+
+## 1. Prerequisites
+
+Install these tools on Linux host:
+
+- minikube
 - kubectl
-- Docker
-- Cilium
-- Hubble
-- bpftrace
-- nginx
-- curlimages/curl
+- docker
 - wrk
-- polinux/stress
+- bpftrace
+- sudo access (required for probes)
 
-## Setup Steps
-
-### Terminal 1 (Kubernetes Setup):
-
-#### 1. Start Minikube
-
-Run the script and make it executable:
+Quick check:
 
 ```bash
-chmod +x 9_start_minikube.sh
-./9_start_minikube.sh
+minikube version
+kubectl version --client
+docker --version
+wrk --version
+bpftrace --version
 ```
 
-#### 2. Install Cilium
+## 2. Give Execute Permission
 
-Run the script and make it executable:
+Run once inside this folder:
 
 ```bash
-chmod +x 9_install_cilium.sh
-./9_install_cilium.sh
+chmod +x 9_start_minikube.sh \
+        9_deploy_all.sh \
+        9_run_experiment.sh \
+        9_ebpf_probes.sh \
+        9_wrk_run_all_phases.sh \
+        9_phase1_baseline.sh \
+        9_phase2_stress.sh \
+        9_phase3_recovery.sh
 ```
 
-#### 3. Deploy nginx microservice
+## 3. Full Setup (Cluster + App)
 
-Run the script and make it executable:
+Recommended single command:
 
 ```bash
-chmod +x 9_deploy_nginx.sh
-./9_deploy_nginx.sh
+bash 9_run_experiment.sh
 ```
 
-### Terminal 2 (Traffic Generator using curl pod)
+What this does:
 
-#### 4. Generate traffic
+1. Starts a 3-node Minikube cluster.
+2. Labels nodes for fixed pod placement.
+3. Deploys Redis and Flask app service.
+4. Prints eBPF probe commands.
 
-Run a curl pod:
+## 4. Run eBPF Probes (5 Terminals)
+
+Open 5 terminals and run one probe per terminal. You can print all commands with:
 
 ```bash
-kubectl run curl --image=curlimages/curl -it --restart=Never -- sh
+bash 9_ebpf_probes.sh
 ```
 
-Inside the pod:
+Or run each script directly in separate terminals:
 
 ```bash
-while true; do curl -s http://web > /dev/null; done
+bash 9_probe_run_queue.sh
 ```
 
-### Terminal 3 (Network Flow Monitoring using Hubble)
-
-#### 5. Observe network flows
-
 ```bash
-cilium hubble port-forward &
-cilium hubble observe
+bash 9_probe_tcp_send.sh
 ```
 
-### Terminal 4 (Kernel TCP Latency Probe):
-
-Terminal 1 can be reused here
-
-#### 6. Run kernel latency probe
-
-(This probe measures latency inside the kernel TCP send path (tcp_sendmsg).)
-Run the script and make it executable:
-
 ```bash
-chmod +x 9_baseline_bpftrace.sh
-./9_baseline_bpftrace.sh
+bash 9_probe_tcp_retransmit.sh
 ```
 
-Let the probe run for 10–20 seconds while traffic is being generated, then stop it using `Ctrl+C` to print the latency histogram.
-
-#### 7. Run Queue Latency Probe (CPU Scheduling Delay)
-
-This probe measures how long a thread waits in the CPU run queue before being scheduled.
-Run the script and make it executable:
-
 ```bash
-chmod +x 9_cpu_scheduling.sh
-./9_cpu_scheduling.sh
+bash 9_probe_socket_drop.sh
 ```
 
-## Experiments
-
-### Experiment 1: Baseline
-
-Continuous curl traffic to nginx service.
-
-### Experiment 2: CPU Contention
-
 ```bash
-chmod +x 9_cpu_stress.sh
-./9_cpu_stress.sh
+bash 9_probe_reddis.sh
 ```
 
-### Experiment 3: Parallel Load
+Keep probes running while workload runs. Use Ctrl+C to stop and print final histograms/counters.
 
-Inside curl pod:
+## 5. Run Load Experiment
+
+### Option A (recommended): all phases in one command
 
 ```bash
-while true; do
-  curl -s http://web > /dev/null &
-  curl -s http://web > /dev/null &
-  curl -s http://web > /dev/null &
-  curl -s http://web > /dev/null &
-  wait
-done
+bash 9_wrk_run_all_phases.sh
 ```
 
-## Observations
+This runs:
 
-- Hubble successfully showed packet flows between curl and web
-- bpftrace successfully measured TCP send latency at kernel level
-- CPU stress increased tail latency modestly
-- Parallel request load caused much stronger tail-latency spikes
+1. Baseline (no stress)
+2. Stress (cpu-stress pod enabled)
+3. Recovery (stress removed)
 
-## Experimental Results
-
-- Baseline: typical latency around tens of microseconds, tail around ~1 ms
-- CPU stress: tail latency increased to approximately 2–4 ms
-- Parallel load: rare outliers extended to tens of milliseconds
-
-## Conclusion
-
-Tail latency in Kubernetes microservices increases under contention and higher concurrency. Combining Hubble and bpftrace provides visibility into both dataplane flow behavior and kernel-level TCP latency.
-
-## Repository Structure
+### Option B: run phases manually
 
 ```bash
-GRS_project/
-│
-├── README.md
-├── 9_report.pdf
-│
-├── 9_start_minikube.sh
-├── 9_install_cilium.sh
-├── 9_deploy_nginx.sh
-│
-├── 9_nginx_microservice_deployment.yaml
-├── 9_nginx_service.yaml
-│
-├── 9_baseline_bpftrace.sh
-├── 9_cpu_scheduling.sh
-├── 9_cpu_stress.sh
-│
-├── 9_wrk_load_stress_latency.sh
-├── 9_wrk_load_latency_results.csv
-│
-├── 9_wrk_load_plot_latency.py
-├── 9_wrk_load_latency_plot.png
-│
-├── 9_tcp_tail_latency_plot.py
-├── 9_tcp_kernel_1.png
-│
-├── 9_cpu_scheduling_plot.py
-└── cpu_queue.png
+bash 9_phase1_baseline.sh
+bash 9_phase2_stress.sh
+bash 9_phase3_recovery.sh
+```
+
+## 6. Results Output
+
+Generated CSV files:
+
+- [results/phase1_baseline.csv](results/phase1_baseline.csv)
+- [results/combined_results.csv](results/combined_results.csv)
+- Additional phase CSVs for stress and recovery are generated after full execution.
+
+## 7. Plot Scripts
+
+Run plot scripts after CSV data is available:
+
+```bash
+python3 9_wrk_load_plot_latency.py
+python3 9_tcp_tail_latency_plot.py
+python3 9_cpu_scheduling_plot.py
+```
+
+## 8. Quick Troubleshooting
+
+Check pods and nodes:
+
+```bash
+kubectl get nodes -o wide
+kubectl get pods -o wide
+kubectl get svc
+```
+
+If app is not reachable:
+
+```bash
+curl -i "http://$(minikube ip):30080/health"
+```
+
+If needed, redeploy app stack:
+
+```bash
+bash 9_deploy_all.sh
+```
+
+## 9. Clean Restart
+
+```bash
+minikube delete
 ```
