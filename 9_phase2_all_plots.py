@@ -1,5 +1,20 @@
 import matplotlib.pyplot as plt
 
+def save_line_multi(x, y_list, labels, title, xlabel, ylabel, out_file, figsize=(12, 5)):
+    plt.figure(figsize=figsize)
+
+    for y, label in zip(y_list, labels):
+        plt.plot(x, y, marker='o', label=label)
+
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.xticks(x)
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(out_file, dpi=300)
+    plt.show()
 
 def save_bar(labels, values, title, xlabel, ylabel, out_file, figsize=(12, 5), horizontal=False):
     plt.figure(figsize=figsize)
@@ -75,6 +90,23 @@ def main():
     redis_values = [20172, 64594, 41849, 24645, 29875, 17637, 9007, 1459, 142, 4746, 335, 0, 0, 0, 3, 2, 7, 5, 2]
     save_bar(redis_labels, redis_values, "Phase 2: Redis Path RTT Approximation", "Latency Bucket (us)", "Events", "results/phase2_redis_rtt_plot.png")
 
+    # 6) Latency vs Connections (Phase 2)
+    connections = [10, 50, 100, 200, 300]
+
+    p50 = [12.64, 126.02, 289.44, 578.39, 827.69]
+    p75 = [40.37, 167.07, 298.41, 593.99, 875.95]
+    p90 = [64.22, 176.96, 307.58, 607.79, 888.20]
+    p99 = [76.55, 190.85, 359.75, 668.14, 926.63]
+
+    save_line_multi(
+        connections,
+        [p50, p75, p90, p99],
+        ["p50", "p75", "p90", "p99"],
+        "Phase 2: Latency vs Connections",
+        "Connections",
+        "Latency (ms)",
+        "results/phase2_latency_vs_connections.png"
+    )
 
 if __name__ == "__main__":
     main()
