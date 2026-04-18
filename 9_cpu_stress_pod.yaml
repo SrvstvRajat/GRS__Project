@@ -19,4 +19,4 @@ spec:
           cpu: "3000m"
           memory: "256Mi"
       command: ["stress"]
-      args: ["--cpu", "4", "--timeout", "300"]
+      args: ["--cpu", "12", "--timeout", "300"]
