@@ -38,7 +38,7 @@ echo ""
 # ─── STEP 4: Print bpftrace commands ─────────
 echo "STEP 4: eBPF Probe Instructions"
 echo "────────────────────────────────────────"
-bash G_9_ebpf_probes.sh
+bash probes/G_9_ebpf_probes.sh
 echo ""
 
 echo "════════════════════════════════════════"
